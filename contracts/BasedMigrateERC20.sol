@@ -7,14 +7,12 @@ import {ILegacyMintableERC20, IOptimismMintableERC20} from "./interface/IOptimis
 import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 /**
- * @title OptimismMintableERC20
- * @notice OptimismMintableERC20 is a standard extension of the base ERC20 token contract designed
- *         to allow the StandardBridge contracts to mint and burn tokens. This makes it possible to
- *         use an OptimismMintablERC20 as the L2 representation of an L1 token, or vice-versa.
- *         Designed to be backwards compatible with the older StandardL2ERC20 token which was only
- *         meant for use on L2.
+ * @title BasedMigrateERC20
+ * @notice BasedMigrateERC20 is adapted from OptimismMintableERC20 to be initialized using Cloning.
+ *         Source code for OptimismMintableERC20:
+ *         https://github.com/ethereum-optimism/optimism/blob/master/packages/contracts-bedrock/contracts/universal/OptimismMintableERC20.sol
  */
-contract OptimismMintableERC20 is Initializable, ERC20Upgradeable, IOptimismMintableERC20, ILegacyMintableERC20 {
+contract BasedMigrateERC20 is Initializable, ERC20Upgradeable, IOptimismMintableERC20, ILegacyMintableERC20 {
     // more lean than Semver and fullfils same requirements
     string public constant version = "1.0.0";
     /**
@@ -43,13 +41,7 @@ contract OptimismMintableERC20 is Initializable, ERC20Upgradeable, IOptimismMint
      */
     event Burn(address indexed account, uint256 amount);
 
-    /**
-     * @notice A modifier that only allows the bridge to call
-     */
-    modifier onlyBridge() {
-        require(msg.sender == BRIDGE, "OptimismMintableERC20: only bridge can mint and burn");
-        _;
-    }
+    error OnlyBridgeAllowed();
 
     constructor() {
         // disable initializer on implementation contract
@@ -83,8 +75,8 @@ contract OptimismMintableERC20 is Initializable, ERC20Upgradeable, IOptimismMint
         external
         virtual
         override(IOptimismMintableERC20, ILegacyMintableERC20)
-        onlyBridge
     {
+        _requireBridge();
         _mint(_to, _amount);
         emit Mint(_to, _amount);
     }
@@ -99,8 +91,8 @@ contract OptimismMintableERC20 is Initializable, ERC20Upgradeable, IOptimismMint
         external
         virtual
         override(IOptimismMintableERC20, ILegacyMintableERC20)
-        onlyBridge
     {
+        _requireBridge();
         _burn(_from, _amount);
         emit Burn(_from, _amount);
     }
@@ -151,5 +143,9 @@ contract OptimismMintableERC20 is Initializable, ERC20Upgradeable, IOptimismMint
      */
     function bridge() public view returns (address) {
         return BRIDGE;
+    }
+
+    function _requireBridge() internal view {
+        if (msg.sender != BRIDGE) revert OnlyBridgeAllowed();
     }
 }

@@ -1,6 +1,6 @@
 pragma solidity 0.8.20;
 
-import {FactoryBase, OptimismMintableERC20, BasedERC20Factory} from "../base/FactoryBase.t.sol";
+import {FactoryBase, BasedMigrateERC20, BasedERC20Factory} from "../base/FactoryBase.t.sol";
 
 contract FactoryUnitTest is FactoryBase {
     string constant tokenName = "BeBased";
@@ -11,7 +11,7 @@ contract FactoryUnitTest is FactoryBase {
         address remoteToken = address(remote);
 
         // deploy new token
-        OptimismMintableERC20 newToken = OptimismMintableERC20(factory.beBased(remoteToken, tokenName, tokenSymbol));
+        BasedMigrateERC20 newToken = BasedMigrateERC20(factory.beBased(remoteToken, tokenName, tokenSymbol));
 
         // assert data
         assertEq(newToken.name(), tokenName);
