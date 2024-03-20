@@ -1,8 +1,8 @@
 [profile.default]
 auto_detect_solc = true
-src = "src"
+src = "contracts"
 out = "out"
-libs = ["lib"]
+libs = ['node_modules', 'lib']
 test = "test"
 bytecode_hash = "none"
 cbor_metadata = false
