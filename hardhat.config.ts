@@ -7,7 +7,7 @@ const config: HardhatUserConfig = {
   solidity: "0.8.20",
   networks: {
     base: {
-      url: "https://rpc.ankr.com/arbitrum",
+      url: "https://base.llamarpc.com",
       accounts: [process.env.PRIVATE_KEY || ""],
     },
     ethereum: {
@@ -15,7 +15,7 @@ const config: HardhatUserConfig = {
       accounts: [process.env.PRIVATE_KEY || ""],
     },
     baseTestnet: {
-      url: "https://rpc.ankr.com/arbitrum",
+      url: "https://base-sepolia-rpc.publicnode.com",
       accounts: [process.env.PRIVATE_KEY || ""],
     },
     sepolia: {
