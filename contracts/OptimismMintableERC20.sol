@@ -4,7 +4,6 @@ pragma solidity 0.8.20;
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 import {ILegacyMintableERC20, IOptimismMintableERC20} from "./interface/IOptimismMintableERC20.sol";
-import {Semver} from "./universal/Semver.sol";
 
 /**
  * @title OptimismMintableERC20
@@ -14,7 +13,9 @@ import {Semver} from "./universal/Semver.sol";
  *         Designed to be backwards compatible with the older StandardL2ERC20 token which was only
  *         meant for use on L2.
  */
-contract OptimismMintableERC20 is IOptimismMintableERC20, ILegacyMintableERC20, ERC20, Semver {
+contract OptimismMintableERC20 is IOptimismMintableERC20, ILegacyMintableERC20, ERC20 {
+    // more lean than Semver and fullfils same requirements
+    string public constant version = "1.0.0";
     /**
      * @notice Address of the corresponding version of this token on the remote chain.
      */
@@ -59,7 +60,6 @@ contract OptimismMintableERC20 is IOptimismMintableERC20, ILegacyMintableERC20, 
      */
     constructor(address _bridge, address _remoteToken, string memory _name, string memory _symbol)
         ERC20(_name, _symbol)
-        Semver(1, 0, 0)
     {
         REMOTE_TOKEN = _remoteToken;
         BRIDGE = _bridge;
