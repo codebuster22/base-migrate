@@ -25,6 +25,34 @@ The Base Migration Tool is a comprehensive solution designed for projects lookin
 
 ### Installation [WIP]
 
+#### Smart Contracts
+Install npm dependencies
+```
+npm install
+```
+
+Install Foundry dependencies
+```
+forge install
+```
+
+Run test
+```
+forge test
+```
+
+Run Coverage
+```
+forge coverage
+```
+
+Deploy and verify contracts on a network
+```
+// this command will deploy both contracts - BasedMigrateERC20 and BasedERC20Factory
+npx hardhat ignition deploy ignition/modules/BasedERC20Factory.ts --network baseSepolia --verify
+```
+Note: Ensure you add a `.env` file with necessary enviornment variables.
+
 ## Contributing
 
 Contributions are welcome! If you have a feature request, bug report, or pull request, please feel free to contribute to the project.
