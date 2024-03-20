@@ -1,6 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.20;
 
+// ██████╗░░█████╗░░██████╗███████╗██████╗░  ███╗░░░███╗██╗░██████╗░██████╗░░█████╗░████████╗███████╗
+// ██╔══██╗██╔══██╗██╔════╝██╔════╝██╔══██╗  ████╗░████║██║██╔════╝░██╔══██╗██╔══██╗╚══██╔══╝██╔════╝
+// ██████╦╝███████║╚█████╗░█████╗░░██║░░██║  ██╔████╔██║██║██║░░██╗░██████╔╝███████║░░░██║░░░█████╗░░
+// ██╔══██╗██╔══██║░╚═══██╗██╔══╝░░██║░░██║  ██║╚██╔╝██║██║██║░░╚██╗██╔══██╗██╔══██║░░░██║░░░██╔══╝░░
+// ██████╦╝██║░░██║██████╔╝███████╗██████╔╝  ██║░╚═╝░██║██║╚██████╔╝██║░░██║██║░░██║░░░██║░░░███████╗
+// ╚═════╝░╚═╝░░╚═╝╚═════╝░╚══════╝╚═════╝░  ╚═╝░░░░░╚═╝╚═╝░╚═════╝░╚═╝░░╚═╝╚═╝░░╚═╝░░░╚═╝░░░╚══════╝
+
 import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import {IERC165} from "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol";
 import {ILegacyMintableERC20, IOptimismMintableERC20} from "./interface/IOptimismMintableERC20.sol";
@@ -13,7 +20,10 @@ import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Ini
  *         https://github.com/ethereum-optimism/optimism/blob/master/packages/contracts-bedrock/contracts/universal/OptimismMintableERC20.sol
  */
 contract BasedMigrateERC20 is Initializable, ERC20Upgradeable, IOptimismMintableERC20, ILegacyMintableERC20 {
-    // more lean than Semver and fullfils same requirements
+    /**
+     * @dev Stores the version of the contract like Semantic Versioning (Semver),
+     * and fulfills the same requirements for version tracking.
+     */
     string public constant version = "1.0.0";
     /**
      * @notice Address of the corresponding version of this token on the remote chain.
@@ -40,9 +50,16 @@ contract BasedMigrateERC20 is Initializable, ERC20Upgradeable, IOptimismMintable
      * @param amount  Amount of tokens burned.
      */
     event Burn(address indexed account, uint256 amount);
-
+    /**
+     * @dev Reverts if the caller is not the StandardBridge contract.
+     */
     error OnlyBridgeAllowed();
 
+    /**
+     * @notice constructor
+     * @dev Disables initializers to prevent the contract from being initialized.
+     * ensuring that only proxy instances can be initialized.
+     */
     constructor() {
         // disable initializer on implementation contract
         _disableInitializers();
@@ -145,6 +162,12 @@ contract BasedMigrateERC20 is Initializable, ERC20Upgradeable, IOptimismMintable
         return BRIDGE;
     }
 
+    /**
+     * @dev Ensures that the function is only called by the bridge contract.
+     * Replaces the `onlyBridge` modifier
+     * It checks if the `msg.sender` is the `BRIDGE` address and reverts with `OnlyBridgeAllowed`
+     * if it is not.
+     */
     function _requireBridge() internal view {
         if (msg.sender != BRIDGE) revert OnlyBridgeAllowed();
     }

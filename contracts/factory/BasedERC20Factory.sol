@@ -1,6 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.20;
 
+// ██████╗░░█████╗░░██████╗███████╗██████╗░  ███╗░░░███╗██╗░██████╗░██████╗░░█████╗░████████╗███████╗
+// ██╔══██╗██╔══██╗██╔════╝██╔════╝██╔══██╗  ████╗░████║██║██╔════╝░██╔══██╗██╔══██╗╚══██╔══╝██╔════╝
+// ██████╦╝███████║╚█████╗░█████╗░░██║░░██║  ██╔████╔██║██║██║░░██╗░██████╔╝███████║░░░██║░░░█████╗░░
+// ██╔══██╗██╔══██║░╚═══██╗██╔══╝░░██║░░██║  ██║╚██╔╝██║██║██║░░╚██╗██╔══██╗██╔══██║░░░██║░░░██╔══╝░░
+// ██████╦╝██║░░██║██████╔╝███████╗██████╔╝  ██║░╚═╝░██║██║╚██████╔╝██║░░██║██║░░██║░░░██║░░░███████╗
+// ╚═════╝░╚═╝░░╚═╝╚═════╝░╚══════╝╚═════╝░  ╚═╝░░░░░╚═╝╚═╝░╚═════╝░╚═╝░░╚═╝╚═╝░░╚═╝░░░╚═╝░░░╚══════╝
+
 import {BasedMigrateERC20} from "../BasedMigrateERC20.sol";
 import {Clones} from "@openzeppelin/contracts/proxy/Clones.sol";
 
@@ -9,11 +16,15 @@ import {Clones} from "@openzeppelin/contracts/proxy/Clones.sol";
  * @notice Factory contract for creating and deploying BasedMigrateERC20 tokens.
  */
 contract BasedERC20Factory {
+    /**
+     * @notice Returns the version of the BasedERC20Factory contract
+     */
     string public constant version = "1.0.0";
+
     /**
      * @notice Address of the BasedMigrateERC20 implementation on this chain.
      */
-    address public basedMigrateErc20;
+    address public immutable basedMigrateErc20;
 
     /**
      * @notice Address of the StandardBridge on this chain.
@@ -24,7 +35,13 @@ contract BasedERC20Factory {
      * @dev Emitted when a remote token address is zero.
      */
     error RemoteTokenCannotBeZeroAddress();
+    /**
+     * @dev Emitted when the bridge address provided is the zero address.
+     */
     error BridgeAddressCannotBeZero();
+    /**
+     * @dev Emitted when the implementation address provided is the zero
+     */
     error ImplementationCannotBeNull();
 
     /**
